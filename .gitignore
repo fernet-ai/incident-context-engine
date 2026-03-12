@@ -1,0 +1,30 @@
+# Credenziali e segreti
+.env
+credentials.json
+token.json
+
+# File intermedi
+.tmp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Agents
+.agents/

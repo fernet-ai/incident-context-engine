@@ -1,0 +1,8 @@
+# MCP SDK ufficiale con CLI tools
+mcp[cli]>=1.0.0
+
+# HTTP client per le API Azure DevOps
+requests>=2.31.0
+
+# Caricamento variabili d'ambiente da .env
+python-dotenv>=1.0.0
