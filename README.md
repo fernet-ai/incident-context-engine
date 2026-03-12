@@ -278,3 +278,60 @@ Il progetto può essere esteso con:
     
 
 ---
+
+# 11. Setup e Configurazione
+
+Per utilizzare ICE come MCP Server, segui questi passaggi:
+
+### 1. Configurazione delle Credenziali
+Copia il file `.env` ed inserisci i tuoi token e URL:
+
+```env
+# OpenShift
+OPENSHIFT_API_URL=https://api.cluster.example.com:6443
+OPENSHIFT_TOKEN=tuo-token-qui        # Ottienilo con: oc whoami -t
+OPENSHIFT_NAMESPACE=tuo-namespace
+
+# Azure DevOps
+AZURE_DEVOPS_ORG_URL=https://dev.azure.com/tua-org
+AZURE_DEVOPS_PAT=tuo-pat-qui         # Personal Access Token con permessi Build/Code
+AZURE_DEVOPS_PROJECT=tuo-progetto
+```
+
+### 2. Installazione Dipendenze
+Assicurati di avere Python 3.10+ installato, quindi esegui:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+### 3. Integrazione con GitHub Copilot
+Per integrare ICE in VS Code con GitHub Copilot, crea (o modifica) il file di configurazione MCP di VS Code:
+
+- **Windows**: `%APPDATA%\Code\User\globalStorage\github.copilot-chat\mcp.json`
+- **macOS/Linux**: `~/Library/Application Support/Code/User/globalStorage/github.copilot-chat\mcp.json`
+
+Aggiungi la configurazione per ICE:
+
+```json
+{
+  "mcpServers": {
+    "incident-context-engine": {
+      "command": "python",
+      "args": ["c:/percorso/assoluto/a/incident-context-engine/backend/main.py"],
+      "env": {
+        "PYTHONPATH": "c:/percorso/assoluto/a/incident-context-engine/backend;c:/percorso/assoluto/a/incident-context-engine/execution"
+      }
+    }
+  }
+}
+```
+
+### 4. Avvio del Server
+Il server viene avviato automaticamente da Copilot tramite il comando configurato sopra. Per testarlo manualmente:
+
+```bash
+python backend/main.py
+```
+
+Potrai quindi chiedere a Copilot: *"Perché il servizio xyz sta crashando?"* e lui userà i tool di ICE per investigare.
