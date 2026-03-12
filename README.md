@@ -334,4 +334,46 @@ Il server viene avviato automaticamente da Copilot tramite il comando configurat
 python backend/main.py
 ```
 
-Potrai quindi chiedere a Copilot: *"Perché il servizio xyz sta crashando?"* e lui userà i tool di ICE per investigare.
+---
+
+# 12. Tool Disponibili
+
+Attualmente ICE espone i seguenti tool all'LLM:
+
+| Categoria | Tool | Descrizione |
+|-----------|------|-------------|
+| **OpenShift** | `get_pod_status` | Stato dei pod (crash, restart, oom) |
+| **OpenShift** | `get_pod_logs` | Recupera gli ultimi N log di un pod |
+| **OpenShift** | `get_deployment_info` | Info su immagine e repliche |
+| **Azure DevOps** | `get_build_info` | Dettagli di build specifiche o recenti |
+| **Azure DevOps** | `get_pipeline_runs` | Ultime esecuzioni di una pipeline |
+| **Azure DevOps** | `get_recent_commits` | Ultimi commit su un repository Git |
+| **Composito** | `get_incident_context` | **Aggregatore**: combina runtime e CI/CD in un unico report |
+
+---
+
+# 13. Testing con MCP Inspector
+
+Se non hai mai usato un server MCP o vuoi testare i tool senza usare Copilot, il metodo più semplice è usare l'**MCP Inspector**.
+
+### A cosa serve?
+L'Inspector apre un'interfaccia web interattiva che ti permette di:
+- Vedere l'elenco dei tool registrati dal server.
+- Inserire manualmente i parametri di input (es. il nome di un servizio).
+- Eseguire il tool e vedere l'output JSON reale restituito dai client (OpenShift/Azure DevOps).
+- Verificare se le tue credenziali nel `.env` sono corrette.
+
+### Come usarlo
+Dalla cartella root del progetto, esegui:
+
+```bash
+mcp dev backend/main.py
+```
+
+1. Il comando avvierà il server e ti fornirà un link (solitamente `http://localhost:5173`).
+2. Apri il link nel browser.
+3. Seleziona un tool dalla lista (es. `get_pod_status`).
+4. Inserisci un parametro (es: `service: "backend"`) e clicca su **"Run Tool"**.
+5. Vedrai la risposta del sistema in tempo reale.
+
+È il modo migliore per assicurarsi che tutto sia configurato correttamente prima di passare all'integrazione finale in VS Code.
