@@ -62,4 +62,5 @@ Presentare all'utente:
 | `get_build_info` | Azure DevOps | Dettagli build CI/CD |
 | `get_pipeline_runs` | Azure DevOps | Esecuzioni pipeline recenti |
 | `get_recent_commits` | Azure DevOps | Ultimi commit su un repo |
+| `get_repositories` | Azure DevOps | Lista dei repository Git nel progetto |
 | `get_incident_context` | Tutti | Contesto aggregato (tool composito) |

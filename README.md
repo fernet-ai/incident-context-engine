@@ -348,6 +348,7 @@ Attualmente ICE espone i seguenti tool all'LLM:
 | **Azure DevOps** | `get_build_info` | Dettagli di build specifiche o recenti |
 | **Azure DevOps** | `get_pipeline_runs` | Ultime esecuzioni di una pipeline |
 | **Azure DevOps** | `get_recent_commits` | Ultimi commit su un repository Git |
+| **Azure DevOps** | `get_repositories` | Lista dei repository Git nel progetto |
 | **Composito** | `get_incident_context` | **Aggregatore**: combina runtime e CI/CD in un unico report |
 
 ---

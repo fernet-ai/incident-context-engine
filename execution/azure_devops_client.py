@@ -199,6 +199,13 @@ def get_commits(project: str = "", repository: str = "", top: int = 10) -> dict:
     Returns:
         dict con lista dei commit (id, autore, messaggio, data)
     """
+    if not repository:
+        return {
+            "success": False,
+            "output": "",
+            "error": "Parametro 'repository' obbligatorio: specifica il nome del repository Git"
+        }
+
     proj = project or settings.AZURE_DEVOPS_PROJECT
     url = f"{settings.AZURE_DEVOPS_ORG_URL}/{proj}/_apis/git/repositories/{repository}/commits"
 
@@ -260,6 +267,41 @@ def get_commit_details(project: str = "", repository: str = "", commit_id: str =
     }
 
     return {"success": True, "output": details, "error": ""}
+
+
+def get_repositories(project: str = "") -> dict:
+    """
+    Recupera la lista dei repository Git in un progetto Azure DevOps.
+
+    API: GET {org}/{project}/_apis/git/repositories
+
+    Args:
+        project: nome del progetto (usa il default da .env se vuoto)
+
+    Returns:
+        dict con lista dei repository (id, nome, default branch, url, size)
+    """
+    proj = project or settings.AZURE_DEVOPS_PROJECT
+    url = f"{settings.AZURE_DEVOPS_ORG_URL}/{proj}/_apis/git/repositories"
+
+    result = _make_request(url)
+
+    if not result["success"]:
+        return result
+
+    repos = []
+    for repo in result["output"].get("value", []):
+        repo_info = {
+            "id": repo.get("id"),
+            "name": repo.get("name"),
+            "default_branch": repo.get("defaultBranch", "").replace("refs/heads/", ""),
+            "web_url": repo.get("remoteUrl"),
+            "size": repo.get("size"),
+            "project": repo.get("project", {}).get("name")
+        }
+        repos.append(repo_info)
+
+    return {"success": True, "output": repos, "error": ""}
 
 
 # === Entry point per test standalone ===

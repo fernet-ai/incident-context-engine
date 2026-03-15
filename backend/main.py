@@ -210,6 +210,25 @@ def get_recent_commits(repository: str, project: str = "", top: int = 10) -> str
     return json.dumps({"commits": result["output"]}, indent=2, default=str)
 
 
+@mcp.tool()
+def get_repositories(project: str = "") -> str:
+    """
+    Recupera la lista dei repository Git disponibili in un progetto Azure DevOps.
+    Utile per scoprire i nomi esatti dei repository prima di cercare commit.
+
+    Args:
+        project: nome del progetto Azure DevOps. Se vuoto, usa il default da .env.
+
+    Returns:
+        JSON con la lista dei repository (nome, default branch, URL, dimensione).
+    """
+    result = azdo.get_repositories(project=project)
+
+    if not result["success"]:
+        return json.dumps({"error": result["error"]})
+
+    return json.dumps({"repositories": result["output"]}, indent=2, default=str)
+
 # ============================================================
 # Tool Composito (aggregazione multi-sorgente)
 # ============================================================
