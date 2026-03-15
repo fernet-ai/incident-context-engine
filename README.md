@@ -367,10 +367,10 @@ L'Inspector apre un'interfaccia web interattiva che ti permette di:
 Dalla cartella root del progetto, esegui:
 
 ```bash
-mcp dev backend/main.py
+npx @modelcontextprotocol/inspector python backend/main.py
 ```
 
-1. Il comando avvierà il server e ti fornirà un link (solitamente `http://localhost:5173`).
+1. Il comando avvierà l'ispettore e ti fornirà un link (es. `http://localhost:6274/...`).
 2. Apri il link nel browser.
 3. Seleziona un tool dalla lista (es. `get_pod_status`).
 4. Inserisci un parametro (es: `service: "backend"`) e clicca su **"Run Tool"**.

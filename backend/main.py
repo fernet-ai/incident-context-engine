@@ -287,11 +287,11 @@ if __name__ == "__main__":
     # Mostra eventuali warning sulla configurazione
     warnings = settings.validate()
     if warnings:
-        print("⚠️  Warning configurazione:")
+        sys.stderr.write("⚠️  Warning configurazione:\n")
         for w in warnings:
-            print(f"   - {w}")
-        print()
+            sys.stderr.write(f"   - {w}\n")
+        sys.stderr.write("\n")
 
     # Avvia il server MCP (usa il transport stdio per default)
-    print("🚀 Avvio Incident Context Engine (MCP Server)...")
+    sys.stderr.write("🚀 Avvio Incident Context Engine (MCP Server)...\n")
     mcp.run()
