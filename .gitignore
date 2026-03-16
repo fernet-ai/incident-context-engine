@@ -28,3 +28,9 @@ Thumbs.db
 
 # Agents
 .agents/
+
+# Debug
+mcp_debug.log
+
+# Imgs
+imgs/
