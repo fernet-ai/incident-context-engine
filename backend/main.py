@@ -22,6 +22,28 @@ from mcp.server.fastmcp import FastMCP
 from config import settings
 import openshift_client as oc
 import azure_devops_client as azdo
+import logging
+from datetime import datetime
+
+# ============================================================
+# Configurazione Logging per Debug
+# ============================================================
+# Il file di log viene creato nella root del progetto
+log_file = _project_root / "mcp_debug.log"
+logging.basicConfig(
+    filename=str(log_file),
+    level=logging.INFO,
+    format='%(asctime)s - TOOL CALLED: %(message)s',
+    force=True
+)
+
+def log_call(tool_name: str, params: str = ""):
+    """Scrive una riga di log per ogni chiamata ricevuta dal client MCP."""
+    msg = f"{tool_name} | Params: {params}"
+    logging.info(msg)
+    # Mostra il log anche su stderr (visibile nell'output di Copilot/IntelliJ)
+    sys.stderr.write(f"DEBUG MCP: {msg}\n")
+
 
 
 # ============================================================
@@ -60,7 +82,9 @@ def get_pod_status(service: str = "", namespace: str = "") -> str:
     Returns:
         JSON con la lista dei pod e il loro stato.
     """
+    log_call("get_pod_status", f"service={service}, namespace={namespace}")
     # Prima effettua il login al cluster
+
     login_result = oc.login()
     if not login_result["success"]:
         return json.dumps({"error": f"Login OpenShift fallito: {login_result['error']}"})
@@ -92,7 +116,9 @@ def get_pod_logs(pod_name: str, namespace: str = "", tail_lines: int = 100, cont
     Returns:
         Le ultime righe di log del pod.
     """
+    log_call("get_pod_logs", f"pod_name={pod_name}, namespace={namespace}, tail={tail_lines}")
     # Login al cluster
+
     login_result = oc.login()
     if not login_result["success"]:
         return json.dumps({"error": f"Login OpenShift fallito: {login_result['error']}"})
@@ -124,8 +150,10 @@ def get_deployment_info(deployment_name: str, namespace: str = "") -> str:
     Returns:
         JSON con le informazioni del deployment.
     """
+    log_call("get_deployment_info", f"deployment={deployment_name}, namespace={namespace}")
     # Login al cluster
     login_result = oc.login()
+
     if not login_result["success"]:
         return json.dumps({"error": f"Login OpenShift fallito: {login_result['error']}"})
 
@@ -155,7 +183,9 @@ def get_build_info(build_id: int = 0, project: str = "") -> str:
     Returns:
         JSON con dettagli della build (status, result, commit, pipeline, autore).
     """
+    log_call("get_build_info", f"build_id={build_id}, project={project}")
     if build_id > 0:
+
         # Recupera i dettagli di una build specifica
         result = azdo.get_build_details(project=project, build_id=build_id)
     else:
@@ -181,7 +211,9 @@ def get_pipeline_runs(pipeline_name: str = "", project: str = "", top: int = 5) 
     Returns:
         JSON con le ultime esecuzioni della pipeline.
     """
+    log_call("get_pipeline_runs", f"pipeline={pipeline_name}, project={project}")
     result = azdo.get_pipeline_runs(project=project, pipeline_name=pipeline_name, top=top)
+
 
     if not result["success"]:
         return json.dumps({"error": result["error"]})
@@ -202,7 +234,9 @@ def get_recent_commits(repository: str, project: str = "", top: int = 10) -> str
     Returns:
         JSON con lista dei commit (id, autore, messaggio, data).
     """
+    log_call("get_recent_commits", f"repository={repository}, project={project}")
     result = azdo.get_commits(project=project, repository=repository, top=top)
+
 
     if not result["success"]:
         return json.dumps({"error": result["error"]})
@@ -222,7 +256,9 @@ def get_repositories(project: str = "") -> str:
     Returns:
         JSON con la lista dei repository (nome, default branch, URL, dimensione).
     """
+    log_call("get_repositories", f"project={project}")
     result = azdo.get_repositories(project=project)
+
 
     if not result["success"]:
         return json.dumps({"error": result["error"]})
@@ -255,7 +291,9 @@ def get_incident_context(service: str, repository: str = "", namespace: str = ""
     Returns:
         JSON aggregato con tutto il contesto dell'incidente.
     """
+    log_call("get_incident_context", f"service={service}, repo={repository}")
     # Il repository di default ha lo stesso nome del servizio
+
     repo = repository or service
     context = {"service": service}
 
